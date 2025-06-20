@@ -1,0 +1,90 @@
+COMMAND CREATOR DOCUMENTATION
+=============================
+
+Implementation Details
+----------------------
+- Written in C++ for system-level efficiency
+- Uses POSIX symlink functions
+- Validates absolute paths (requires leading '/')
+- Error handling follows Unix conventions
+
+File Structure
+--------------
+main.cpp
+- Entry point
+- Argument parsing
+- Action routing
+
+commands.h/cpp
+- Core functionality
+- Symlink management
+- Error generation
+
+Technical Constraints
+---------------------
+1. Requires sudo because:
+   - /usr/local/bin modification needs root
+   - System PATH already includes this directory
+   - Standard Unix permission practice
+
+2. Absolute paths required because:
+   - Relative paths break when called from other directories
+   - Symlinks need fixed references
+   - Maintains predictable behavior
+
+Error Handling System
+--------------------
+Error Type Hierarchy:
+- Usage (10): Incorrect command structure
+- Action (11): Invalid operation specified
+- Create/Update/Remove (20-22): Operation-specific failures
+
+Each error:
+1. Outputs formatted message to stderr
+2. Returns corresponding exit code
+3. Includes corrective usage example
+
+API Reference
+-------------
+createCommand(path, name):
+- Validates path exists
+- Checks name availability
+- Creates symlink at /usr/local/bin/[name]
+
+updateCommand(path, name):
+- Verifies command exists
+- Validates new path
+- Replaces existing symlink
+
+removeCommand(name):
+- Checks symlink existence
+- Validates ownership
+- Deletes symlink
+
+Development Notes
+----------------
+Testing Methodology:
+1. Verify symlink creation
+2. Test path resolution
+3. Validate permission handling
+4. Verify clean removal
+
+Known Limitations:
+- Doesn't handle command aliases
+- No batch operations
+- Limited path validation
+
+Example Workflows
+----------------
+1. Python Script Deployment:
+   - Develop script with shebang (#!/usr/bin/env python3)
+   - chmod +x script.py
+   - sudo command create pyscript /full/path/script.py
+
+2. Bash Utility Update:
+   - Modify existing script
+   - sudo command update butil /new/path/script.sh
+
+3. Command Removal:
+   - sudo command remove oldtool
+   - Verify /usr/local/bin/oldtool removed
