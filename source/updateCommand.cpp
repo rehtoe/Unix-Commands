@@ -4,6 +4,7 @@
 #include "commands.h"
 
 void updateCommand(std::string filePath, std::string commName){
+    std::cout << "Updating '" << commName << "' command from file: \"" << filePath <<"\"\n";
     std::string command0 = "sudo rm /usr/local/bin/" + commName;
     std::string command1 = "sudo cp " + filePath + " /usr/local/bin/" + commName;
     std::string command2 = "sudo chmod +x /usr/local/bin/" + commName;
