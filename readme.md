@@ -22,7 +22,7 @@ Creates system-wide Unix commands by linking user files or executables to /usr/l
 
 ### Installation
     ```
-    sh install_CLI.sh
+    sudo sh install_CLI.sh
     ```
 
 ## Usage Syntax
